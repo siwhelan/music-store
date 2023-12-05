@@ -23,10 +23,29 @@ def test_post_album(db_connection, web_client):
 
 
 # calling GET /albums returns a list of albums
-
-
 def test_get_albums(db_connection, web_client):
     db_connection.seed("seeds/music_store.sql")
     response = web_client.get("/albums")
     assert response.status_code == 200
     assert response.data.decode("utf-8") == "" "Album(1, Demon Days, 2005, 1)"
+
+
+# calling get artist returns a list of artists from the db
+def test_get_artist(db_connection, web_client):
+    db_connection.seed("seeds/music_store.sql")
+    response = web_client.get("/artists")
+    assert response.status_code == 200
+    assert response.data.decode("utf-8") == "Artist(1, Gorillaz)"
+
+
+# test POST /artist adds a new artist to the db
+def test_post_artist(db_connection, web_client):
+    db_connection.seed("seeds/music_store.sql")
+    post_response = web_client.post("/artists", data={"artist": "Oasis"})
+
+    assert post_response.status_code == 200
+    assert post_response.data.decode("utf-8") == ""
+
+    get_response = web_client.get("/artists")
+    assert get_response.status_code == 200
+    assert get_response.data.decode("utf-8") == "Artist(1, Gorillaz)\nArtist(2, Oasis)"

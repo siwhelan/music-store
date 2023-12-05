@@ -6,6 +6,8 @@
 -- First, we must delete (drop) all our tables
 DROP TABLE IF EXISTS albums;
 DROP SEQUENCE IF EXISTS albums_id_seq;
+DROP TABLE IF EXISTS artists;
+DROP SEQUENCE IF EXISTS artists_id_seq;
 
 -- Then, we recreate them
 CREATE SEQUENCE IF NOT EXISTS albums_id_seq;
@@ -16,5 +18,11 @@ CREATE TABLE albums (
   artist_id int
 );
 
+CREATE TABLE artists (
+  id SERIAL,
+  artist text
+);
+
 -- Finally, we add any records that are needed for the tests to run
 INSERT INTO albums (title, release_year, artist_id) VALUES ('Demon Days', 2005, 1);
+INSERT INTO artists (artist) VALUES ('Gorillaz')

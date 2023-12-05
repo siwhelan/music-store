@@ -2,7 +2,9 @@ import os
 from flask import Flask, request
 from lib.database_connection import get_flask_database_connection
 from lib.album_repository import AlbumRepository
+from lib.artist_repository import ArtistRepository
 from lib.album import Album
+from lib.artist import Artist
 
 # Create a new Flask app
 app = Flask(__name__)
@@ -32,6 +34,22 @@ def get_albums():
     connection = get_flask_database_connection(app)
     repo = AlbumRepository(connection)
     return "\n".join(f"{album}" for album in repo.all())
+
+
+@app.route("/artists")
+def get_artists():
+    connection = get_flask_database_connection(app)
+    repo = ArtistRepository(connection)
+    return "\n".join(f"{artist}" for artist in repo.all())
+
+
+@app.route("/artists", methods=["POST"])
+def post_artists():
+    connection = get_flask_database_connection(app)
+    repo = ArtistRepository(connection)
+    artist = Artist(None, request.form["artist"])
+    repo.create(artist)
+    return "", 200
 
 
 # This imports some more example routes for you to see how they work
